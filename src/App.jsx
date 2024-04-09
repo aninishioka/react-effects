@@ -1,6 +1,5 @@
-import { useState } from 'react';
-import logo from './logo.svg'
 import './App.css';
+import Cards from './Cards';
 
 
 /** Component for entire page.
@@ -8,31 +7,15 @@ import './App.css';
  * Props: none
  * State: none
  *
+ *
+ * App -> Cards
 */
 
 function App() {
-  const [count, setCount] = useState(0);
-
-  function incrCount() {
-    setCount(count => count + 1);
-  }
 
   return (
     <div className="App">
-      <main>
-        <img src={logo} className="App-logo" alt="Rithm" />
-        <h1>Rithm React Starter</h1>
-        <p>
-          <button
-              className="btn btn-primary"
-              onClick={incrCount}>
-            Clicked: {count}
-          </button>
-        </p>
-        <p>
-          Edit <code>src/App.jsx</code>
-        </p>
-      </main>
+      <Cards/>
     </div>
   );
 };
