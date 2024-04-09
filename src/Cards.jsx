@@ -8,15 +8,15 @@ const BASE_URL = 'https://deckofcardsapi.com/api/deck/'
  * Props: none
  *
  * State:
- * - deck: id of deck
+ * - deck: object like {id, isShuffling}
  * - cards: array of objects like [{code, image}]
- * - remaining: number of remaining cards in deck
+ *
  *
  * App -> Cards
  */
 
 function Cards() {
-    const [deck, setDeck] = useState();
+    const [deck, setDeck] = useState({id: null, isShuffling: false});
     const [cards, setCards] = useState([]);
 
     /** Fetch new deck on mount */
@@ -24,15 +24,14 @@ function Cards() {
         async function fetchDeck() {
             const resp = await fetch(`${BASE_URL}new/shuffle/?deck_count=1`);
             const data = await resp.json();
-            console.log(data);
-            setDeck(data.deck_id);
+            setDeck({id: data.deck_id, isShuffling: false});
         }
         fetchDeck();
-    }, []);
+    }, [deck]);
 
     /** Fetch new card on button click. */
     async function handleClick() {
-        const resp = await fetch(`${BASE_URL}${deck}/draw/?count=52`);
+        const resp = await fetch(`${BASE_URL}${deck.id}/draw/?count=1`);
         const data = await resp.json();
         console.log(data);
         const newCards = data.cards.map(c => ({code: c.code, image: c.image}));
@@ -43,10 +42,17 @@ function Cards() {
         setCards(cards => [...cards, ...newCards]);
     }
 
+    /** Changes isShuffling to true and empties the cards list */
+    function shuffle() {
+        setDeck({...deck, isShuffling: true});
+        setCards([]);
+    }
+
     return (
         <div>
             {cards.map(c => <div key={c.code}><img src={c.image} /></div>)}
             <button onClick={handleClick}>GIMME A CARD!</button>
+            <button disabled={deck.isShuffling} onClick={shuffle}>Shuffle</button>
         </div>
     )
 }
